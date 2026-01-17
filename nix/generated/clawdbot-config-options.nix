@@ -313,6 +313,16 @@ in
           path = lib.mkOption {
             type = t.str;
           };
+          vector = lib.mkOption {
+            type = t.submodule { options = {
+            enabled = lib.mkOption {
+              type = t.bool;
+            };
+            extensionPath = lib.mkOption {
+              type = t.str;
+            };
+          }; };
+          };
         }; };
         };
         sync = lib.mkOption {
@@ -690,6 +700,16 @@ in
           };
           path = lib.mkOption {
             type = t.str;
+          };
+          vector = lib.mkOption {
+            type = t.submodule { options = {
+            enabled = lib.mkOption {
+              type = t.bool;
+            };
+            extensionPath = lib.mkOption {
+              type = t.str;
+            };
+          }; };
           };
         }; };
         };
