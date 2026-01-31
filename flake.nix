@@ -57,7 +57,6 @@
           };
           hm-activation = import ./nix/checks/openclaw-hm-activation.nix {
             inherit pkgs home-manager;
-            lib = pkgs.lib;
           };
         } else {});
 
