@@ -45,8 +45,10 @@ except Exception:
         f"su - alice -c '{user_env} systemctl --user show openclaw-gateway.service --no-pager -p Environment 2>&1 > /tmp/openclaw/systemctl-env.txt' || true"
     )
     machine.succeed("sed -n '1,200p' /tmp/openclaw/systemctl-env.txt || true")
+    machine.succeed("wc -c /tmp/openclaw/systemctl-env.txt || true")
     machine.succeed(
         f"su - alice -c '{user_env} systemctl --user cat openclaw-gateway.service --no-pager 2>&1 > /tmp/openclaw/systemctl-unit.txt' || true"
     )
     machine.succeed("sed -n '1,200p' /tmp/openclaw/systemctl-unit.txt || true")
+    machine.succeed("wc -c /tmp/openclaw/systemctl-unit.txt || true")
     raise
