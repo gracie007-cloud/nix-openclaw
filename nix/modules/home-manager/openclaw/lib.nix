@@ -19,8 +19,8 @@ let
   generatedConfigOptions = import ../../../generated/openclaw-config-options.nix { lib = lib; };
 
   firstPartySources = let
-    stepieteRev = "c4a860132460eea4367057055dbfea175bcb11c4";
-    stepieteNarHash = "sha256-X7sNYo+YLZ574zdr5pBv+Fnz+OSCXaD+gFSGyamgfDA=";
+    stepieteRev = "9f4ac19975bc62239f4e306d0754bc9303529a52";
+    stepieteNarHash = "sha256-15vMSRoPq1d0rasdcvuJ5XUYuMGX/H69/WWx1qyVJpo=";
     stepiete = tool:
       "github:openclaw/nix-steipete-tools?dir=tools/${tool}&rev=${stepieteRev}&narHash=${stepieteNarHash}";
   in {
