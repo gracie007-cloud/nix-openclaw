@@ -27,7 +27,7 @@ let
     app = {
       install = {
         enable = false;
-        path = "${homeDir}/Applications/Openclaw.app";
+        path = "${homeDir}/Applications/OpenClaw.app";
       };
     };
   };
@@ -115,7 +115,7 @@ let
     else {
       name = lib.removePrefix "${homeDir}/" inst.app.install.path;
       value = {
-        source = "${appPackage}/Applications/Openclaw.app";
+        source = "${appPackage}/Applications/OpenClaw.app";
         recursive = true;
         force = true;
       };
@@ -223,8 +223,8 @@ in {
     home.file = lib.mkMerge [
       (lib.listToAttrs (map (item: item.homeFile) instanceConfigs))
       (lib.optionalAttrs (pkgs.stdenv.hostPlatform.isDarwin && appPackage != null && cfg.installApp) {
-        "Applications/Openclaw.app" = {
-          source = "${appPackage}/Applications/Openclaw.app";
+        "Applications/OpenClaw.app" = {
+          source = "${appPackage}/Applications/OpenClaw.app";
           recursive = true;
           force = true;
         };

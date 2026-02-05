@@ -73,7 +73,7 @@ in {
     installApp = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Install Openclaw.app at the default location.";
+      description = "Install OpenClaw.app at the default location.";
     };
 
     stateDir = lib.mkOption {

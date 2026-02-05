@@ -116,13 +116,13 @@
     app.install.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "Install Openclaw.app for this instance.";
+      description = "Install OpenClaw.app for this instance.";
     };
 
     app.install.path = lib.mkOption {
       type = lib.types.str;
-      default = "${openclawLib.homeDir}/Applications/Openclaw.app";
-      description = "Destination path for this instance's Openclaw.app bundle.";
+      default = "${openclawLib.homeDir}/Applications/OpenClaw.app";
+      description = "Destination path for this instance's OpenClaw.app bundle.";
     };
 
     appDefaults = {

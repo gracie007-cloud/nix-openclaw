@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [[ "${GITHUB_ACTIONS:-}" != "true" ]]; then
+  echo "This script is intended to run in GitHub Actions (see .github/workflows/yolo-update.yml). Refusing to run locally." >&2
+  exit 1
+fi
+
 repo_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 source_file="$repo_root/nix/sources/openclaw-source.nix"
 app_file="$repo_root/nix/packages/openclaw-app.nix"
@@ -46,7 +51,7 @@ if ! command -v jq >/dev/null 2>&1; then
 fi
 
 log "Updating nix-steipete-tools input"
-nix flake lock --update-input nix-steipete-tools
+nix flake update --update-input nix-steipete-tools --accept-flake-config
 
 log "Resolving openclaw main SHAs"
 mapfile -t candidate_shas < <(gh api /repos/openclaw/openclaw/commits?per_page=10 | jq -r '.[].sha' || true)
@@ -138,16 +143,16 @@ if [[ -z "$release_json" ]]; then
   echo "Failed to fetch release metadata" >&2
   exit 1
 fi
-release_tag=$(printf '%s' "$release_json" | jq -r '[.[] | select([.assets[]?.name | (test("^Clawdbot-.*\\.zip$") and (test("dSYM") | not))] | any)][0].tag_name // empty')
+release_tag=$(printf '%s' "$release_json" | jq -r '[.[] | select([.assets[]?.name | (test("^OpenClaw-.*\\.zip$") and (test("dSYM") | not))] | any)][0].tag_name // empty')
 if [[ -z "$release_tag" ]]; then
-  echo "Failed to resolve a release tag with a Clawdbot app asset" >&2
+  echo "Failed to resolve a release tag with an OpenClaw app asset" >&2
   exit 1
 fi
 log "Latest app release tag with asset: $release_tag"
 
-app_url=$(printf '%s' "$release_json" | jq -r '[.[] | select([.assets[]?.name | (test("^Clawdbot-.*\\.zip$") and (test("dSYM") | not))] | any)][0].assets[] | select(.name | (test("^Clawdbot-.*\\.zip$") and (test("dSYM") | not))) | .browser_download_url' | head -n 1 || true)
+app_url=$(printf '%s' "$release_json" | jq -r '[.[] | select([.assets[]?.name | (test("^OpenClaw-.*\\.zip$") and (test("dSYM") | not))] | any)][0].assets[] | select(.name | (test("^OpenClaw-.*\\.zip$") and (test("dSYM") | not))) | .browser_download_url' | head -n 1 || true)
 if [[ -z "$app_url" ]]; then
-  echo "Failed to resolve Clawdbot app asset URL from latest release" >&2
+  echo "Failed to resolve OpenClaw app asset URL from latest release" >&2
   exit 1
 fi
 log "App asset URL: $app_url"
