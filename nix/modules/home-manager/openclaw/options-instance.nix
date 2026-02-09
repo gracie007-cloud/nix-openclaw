@@ -6,13 +6,13 @@
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Enable this Openclaw instance.";
+      description = "Enable this OpenClaw instance.";
     };
 
     package = lib.mkOption {
       type = lib.types.package;
       default = openclawLib.defaultPackage;
-      description = "Openclaw batteries-included package.";
+      description = "OpenClaw batteries-included package.";
     };
 
     stateDir = lib.mkOption {
@@ -20,19 +20,19 @@
       default = if name == "default"
         then "${openclawLib.homeDir}/.openclaw"
         else "${openclawLib.homeDir}/.openclaw-${name}";
-      description = "State directory for this Openclaw instance (logs, sessions, config).";
+      description = "State directory for this OpenClaw instance (logs, sessions, config).";
     };
 
     workspaceDir = lib.mkOption {
       type = lib.types.str;
       default = "${config.stateDir}/workspace";
-      description = "Workspace directory for this Openclaw instance.";
+      description = "Workspace directory for this OpenClaw instance.";
     };
 
     configPath = lib.mkOption {
       type = lib.types.str;
       default = "${config.stateDir}/openclaw.json";
-      description = "Path to generated Openclaw config JSON.";
+      description = "Path to generated OpenClaw config JSON.";
     };
 
     logPath = lib.mkOption {
@@ -40,19 +40,19 @@
       default = if name == "default"
         then "/tmp/openclaw/openclaw-gateway.log"
         else "/tmp/openclaw/openclaw-gateway-${name}.log";
-      description = "Log path for this Openclaw gateway instance.";
+      description = "Log path for this OpenClaw gateway instance.";
     };
 
     gatewayPort = lib.mkOption {
       type = lib.types.int;
       default = 18789;
-      description = "Gateway port used by the Openclaw desktop app.";
+      description = "Gateway port used by the OpenClaw desktop app.";
     };
 
     gatewayPath = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
-      description = "Local path to Openclaw gateway source (dev only).";
+      description = "Local path to OpenClaw gateway source (dev only).";
     };
 
     gatewayPnpmDepsHash = lib.mkOption {
@@ -82,13 +82,13 @@
     config = lib.mkOption {
       type = lib.types.submodule { options = openclawLib.generatedConfigOptions; };
       default = {};
-      description = "Openclaw config (schema-typed).";
+      description = "OpenClaw config (schema-typed).";
     };
 
     launchd.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Run Openclaw gateway via launchd (macOS).";
+      description = "Run OpenClaw gateway via launchd (macOS).";
     };
 
     launchd.label = lib.mkOption {
@@ -102,7 +102,7 @@
     systemd.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Run Openclaw gateway via systemd user service (Linux).";
+      description = "Run OpenClaw gateway via systemd user service (Linux).";
     };
 
     systemd.unitName = lib.mkOption {
@@ -116,13 +116,13 @@
     app.install.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "Install Openclaw.app for this instance.";
+      description = "Install OpenClaw.app for this instance.";
     };
 
     app.install.path = lib.mkOption {
       type = lib.types.str;
-      default = "${openclawLib.homeDir}/Applications/Openclaw.app";
-      description = "Destination path for this instance's Openclaw.app bundle.";
+      default = "${openclawLib.homeDir}/Applications/OpenClaw.app";
+      description = "Destination path for this instance's OpenClaw.app bundle.";
     };
 
     appDefaults = {
@@ -136,6 +136,12 @@
         type = lib.types.bool;
         default = true;
         description = "Attach existing gateway only (macOS).";
+      };
+
+      nixMode = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Enable OpenClaw Nix mode in the macOS app via defaults (openclaw.nixMode).";
       };
     };
   };

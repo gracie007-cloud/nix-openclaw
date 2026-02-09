@@ -27,7 +27,7 @@ let
     app = {
       install = {
         enable = false;
-        path = "${homeDir}/Applications/Openclaw.app";
+        path = "${homeDir}/Applications/OpenClaw.app";
       };
     };
   };
@@ -73,7 +73,13 @@ let
         inst.package;
     pluginPackages = plugins.pluginPackagesFor name;
     pluginEnvAll = plugins.pluginEnvAllFor name;
-    mergedConfig = stripNulls (lib.recursiveUpdate (lib.recursiveUpdate baseConfig cfg.config) inst.config);
+    mergedConfig0 = stripNulls (lib.recursiveUpdate (lib.recursiveUpdate baseConfig cfg.config) inst.config);
+    existingWorkspace = (((mergedConfig0.agents or {}).defaults or {}).workspace or null);
+    mergedConfig =
+      if (cfg.workspace.pinAgentDefaults or true) && existingWorkspace == null then
+        lib.recursiveUpdate mergedConfig0 { agents = { defaults = { workspace = inst.workspaceDir; }; }; }
+      else
+        mergedConfig0;
     configJson = builtins.toJSON mergedConfig;
     configFile = pkgs.writeText "openclaw-${name}.json" configJson;
     gatewayWrapper = pkgs.writeShellScriptBin "openclaw-gateway-${name}" ''
@@ -108,6 +114,7 @@ let
     appDefaults = lib.optionalAttrs (pkgs.stdenv.hostPlatform.isDarwin && inst.appDefaults.enable) {
       attachExistingOnly = inst.appDefaults.attachExistingOnly;
       gatewayPort = inst.gatewayPort;
+      nixMode = inst.appDefaults.nixMode;
     };
 
     appInstall = if !(pkgs.stdenv.hostPlatform.isDarwin && inst.app.install.enable && appPackage != null) then
@@ -115,7 +122,7 @@ let
     else {
       name = lib.removePrefix "${homeDir}/" inst.app.install.path;
       value = {
-        source = "${appPackage}/Applications/Openclaw.app";
+        source = "${appPackage}/Applications/OpenClaw.app";
         recursive = true;
         force = true;
       };
@@ -154,14 +161,6 @@ let
             OPENCLAW_STATE_DIR = inst.stateDir;
             OPENCLAW_IMAGE_BACKEND = "sips";
             OPENCLAW_NIX_MODE = "1";
-            MOLTBOT_CONFIG_PATH = inst.configPath;
-            MOLTBOT_STATE_DIR = inst.stateDir;
-            MOLTBOT_IMAGE_BACKEND = "sips";
-            MOLTBOT_NIX_MODE = "1";
-            CLAWDBOT_CONFIG_PATH = inst.configPath;
-            CLAWDBOT_STATE_DIR = inst.stateDir;
-            CLAWDBOT_IMAGE_BACKEND = "sips";
-            CLAWDBOT_NIX_MODE = "1";
           };
         };
       };
@@ -170,7 +169,7 @@ let
     systemdService = lib.optionalAttrs (pkgs.stdenv.hostPlatform.isLinux && inst.systemd.enable) {
       "${inst.systemd.unitName}" = {
         Unit = {
-          Description = "Openclaw gateway (${name})";
+          Description = "OpenClaw gateway (${name})";
         };
         Service = {
           ExecStart = "${gatewayWrapper}/bin/openclaw-gateway-${name} gateway --port ${toString inst.gatewayPort}";
@@ -182,12 +181,6 @@ let
             "OPENCLAW_CONFIG_PATH=${inst.configPath}"
             "OPENCLAW_STATE_DIR=${inst.stateDir}"
             "OPENCLAW_NIX_MODE=1"
-            "MOLTBOT_CONFIG_PATH=${inst.configPath}"
-            "MOLTBOT_STATE_DIR=${inst.stateDir}"
-            "MOLTBOT_NIX_MODE=1"
-            "CLAWDBOT_CONFIG_PATH=${inst.configPath}"
-            "CLAWDBOT_STATE_DIR=${inst.stateDir}"
-            "CLAWDBOT_NIX_MODE=1"
           ];
           StandardOutput = "append:${inst.logPath}";
           StandardError = "append:${inst.logPath}";
@@ -211,7 +204,7 @@ in {
     assertions = [
       {
         assertion = lib.length (lib.attrNames appDefaultsEnabled) <= 1;
-        message = "Only one Openclaw instance may enable appDefaults.";
+        message = "Only one OpenClaw instance may enable appDefaults.";
       }
     ] ++ files.documentsAssertions ++ files.skillAssertions ++ plugins.pluginAssertions ++ plugins.pluginSkillAssertions;
 
@@ -223,8 +216,8 @@ in {
     home.file = lib.mkMerge [
       (lib.listToAttrs (map (item: item.homeFile) instanceConfigs))
       (lib.optionalAttrs (pkgs.stdenv.hostPlatform.isDarwin && appPackage != null && cfg.installApp) {
-        "Applications/Openclaw.app" = {
-          source = "${appPackage}/Applications/Openclaw.app";
+        "Applications/OpenClaw.app" = {
+          source = "${appPackage}/Applications/OpenClaw.app";
           recursive = true;
           force = true;
         };
@@ -264,8 +257,10 @@ in {
 
     home.activation.openclawAppDefaults = lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin && appDefaults != {}) (
       lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        /usr/bin/defaults write com.steipete.Openclaw openclaw.gateway.attachExistingOnly -bool ${lib.boolToString (appDefaults.attachExistingOnly or true)}
-        /usr/bin/defaults write com.steipete.Openclaw gatewayPort -int ${toString (appDefaults.gatewayPort or 18789)}
+        # Nix mode + app defaults (OpenClaw.app)
+        /usr/bin/defaults write ai.openclaw.mac openclaw.nixMode -bool ${lib.boolToString (appDefaults.nixMode or true)}
+        /usr/bin/defaults write ai.openclaw.mac openclaw.gateway.attachExistingOnly -bool ${lib.boolToString (appDefaults.attachExistingOnly or true)}
+        /usr/bin/defaults write ai.openclaw.mac gatewayPort -int ${toString (appDefaults.gatewayPort or 18789)}
       ''
     );
 
