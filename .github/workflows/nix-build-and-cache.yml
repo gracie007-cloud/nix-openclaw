@@ -3,25 +3,18 @@ name: "Nix Build and Cache"
 on:
   push:
     branches: [ main ]
-  workflow_run:
-    workflows: [ "Yolo Update Pins" ]
-    types: [ completed ]
   workflow_dispatch:
 
 jobs:
   build-and-cache-linux:
     name: build-and-cache-linux
-    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
     runs-on: ubuntu-latest
     env:
-      TARGET_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
       CACHIX_CACHE_NAME: ${{ vars.CACHIX_CACHE_NAME }}
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ env.TARGET_SHA }}
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v13
@@ -66,17 +59,13 @@ jobs:
 
   build-and-cache-macos:
     name: build-and-cache-macos
-    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
     runs-on: macos-14
     env:
-      TARGET_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
       CACHIX_CACHE_NAME: ${{ vars.CACHIX_CACHE_NAME }}
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ env.TARGET_SHA }}
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v13
