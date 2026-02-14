@@ -2,7 +2,7 @@ name: Cache Only
 
 on:
   workflow_run:
-    workflows: [ "Nix Build and Cache" ]
+    workflows: [ "Nix Build Cache" ]
     types: [ completed ]
   workflow_dispatch: {}
 
