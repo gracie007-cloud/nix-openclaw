@@ -51,7 +51,11 @@
         };
       in
       {
-        formatter = pkgs.nixfmt-tree;
+        formatter = pkgs.nixfmt-tree.override {
+          settings = {
+            global.excludes = [ "nix/generated/openclaw-config-options.nix" ];
+          };
+        };
 
         packages = packageSetStable // {
           default = packageSetStable.openclaw;

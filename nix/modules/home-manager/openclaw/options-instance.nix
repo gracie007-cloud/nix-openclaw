@@ -17,9 +17,11 @@
 
     stateDir = lib.mkOption {
       type = lib.types.str;
-      default = if name == "default"
-        then "${openclawLib.homeDir}/.openclaw"
-        else "${openclawLib.homeDir}/.openclaw-${name}";
+      default =
+        if name == "default" then
+          "${openclawLib.homeDir}/.openclaw"
+        else
+          "${openclawLib.homeDir}/.openclaw-${name}";
       description = "State directory for this OpenClaw instance (logs, sessions, config).";
     };
 
@@ -37,9 +39,11 @@
 
     logPath = lib.mkOption {
       type = lib.types.str;
-      default = if name == "default"
-        then "/tmp/openclaw/openclaw-gateway.log"
-        else "/tmp/openclaw/openclaw-gateway-${name}.log";
+      default =
+        if name == "default" then
+          "/tmp/openclaw/openclaw-gateway.log"
+        else
+          "/tmp/openclaw/openclaw-gateway-${name}.log";
       description = "Log path for this OpenClaw gateway instance.";
     };
 
@@ -62,26 +66,28 @@
     };
 
     plugins = lib.mkOption {
-      type = lib.types.listOf (lib.types.submodule {
-        options = {
-          source = lib.mkOption {
-            type = lib.types.str;
-            description = "Plugin source pointer (e.g., github:owner/repo or path:/...).";
+      type = lib.types.listOf (
+        lib.types.submodule {
+          options = {
+            source = lib.mkOption {
+              type = lib.types.str;
+              description = "Plugin source pointer (e.g., github:owner/repo or path:/...).";
+            };
+            config = lib.mkOption {
+              type = lib.types.attrs;
+              default = { };
+              description = "Plugin-specific configuration (env/files/etc).";
+            };
           };
-          config = lib.mkOption {
-            type = lib.types.attrs;
-            default = {};
-            description = "Plugin-specific configuration (env/files/etc).";
-          };
-        };
-      });
+        }
+      );
       default = openclawLib.effectivePlugins;
       description = "Plugins enabled for this instance (includes first-party toggles).";
     };
 
     config = lib.mkOption {
       type = lib.types.submodule { options = openclawLib.generatedConfigOptions; };
-      default = {};
+      default = { };
       description = "OpenClaw config (schema-typed).";
     };
 
@@ -93,9 +99,11 @@
 
     launchd.label = lib.mkOption {
       type = lib.types.str;
-      default = if name == "default"
-        then "com.steipete.openclaw.gateway"
-        else "com.steipete.openclaw.gateway.${name}";
+      default =
+        if name == "default" then
+          "com.steipete.openclaw.gateway"
+        else
+          "com.steipete.openclaw.gateway.${name}";
       description = "launchd label for this instance.";
     };
 
@@ -107,9 +115,7 @@
 
     systemd.unitName = lib.mkOption {
       type = lib.types.str;
-      default = if name == "default"
-        then "openclaw-gateway"
-        else "openclaw-gateway-${name}";
+      default = if name == "default" then "openclaw-gateway" else "openclaw-gateway-${name}";
       description = "systemd user service unit name for this instance.";
     };
 

@@ -1,4 +1,8 @@
-{ lib, stdenv, openclawGateway }:
+{
+  lib,
+  stdenv,
+  openclawGateway,
+}:
 
 stdenv.mkDerivation {
   pname = "openclaw-package-contents";

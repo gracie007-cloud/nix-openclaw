@@ -8,45 +8,55 @@
     nix-openclaw.url = "github:openclaw/nix-openclaw";
   };
 
-  outputs = { nixpkgs, home-manager, nix-openclaw, ... }:
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      nix-openclaw,
+      ...
+    }:
     let
       system = "aarch64-darwin";
       pkgs = import nixpkgs {
         inherit system;
         overlays = [ nix-openclaw.overlays.default ];
       };
-    in {
+    in
+    {
       homeConfigurations.hm-test = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
           nix-openclaw.homeManagerModules.openclaw
-          ({ ... }: {
-            home = {
-              username = "runner";
-              homeDirectory = "/tmp/hm-activation-home";
-              stateVersion = "23.11";
-            };
+          (
+            { ... }:
+            {
+              home = {
+                username = "runner";
+                homeDirectory = "/tmp/hm-activation-home";
+                stateVersion = "23.11";
+              };
 
-            programs.openclaw = {
-              enable = true;
-              installApp = false;
-              instances.default = {
-                gatewayPort = 18999;
-                config = {
-                  logging = {
-                    level = "debug";
-                    file = "/tmp/openclaw/openclaw-gateway.log";
-                  };
-                  gateway = {
-                    mode = "local";
-                    auth = {
-                      token = "hm-activation-test-token";
+              programs.openclaw = {
+                enable = true;
+                installApp = false;
+                instances.default = {
+                  gatewayPort = 18999;
+                  config = {
+                    logging = {
+                      level = "debug";
+                      file = "/tmp/openclaw/openclaw-gateway.log";
+                    };
+                    gateway = {
+                      mode = "local";
+                      auth = {
+                        token = "hm-activation-test-token";
+                      };
                     };
                   };
                 };
               };
-            };
-          })
+            }
+          )
         ];
       };
     };

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   openclawLib = import ./lib.nix { inherit config lib pkgs; };
@@ -30,7 +35,11 @@ let
         description = "Optional openclaw metadata for the skill frontmatter.";
       };
       mode = lib.mkOption {
-        type = lib.types.enum [ "symlink" "copy" "inline" ];
+        type = lib.types.enum [
+          "symlink"
+          "copy"
+          "inline"
+        ];
         default = "symlink";
         description = "Install mode for the skill (symlink/copy/inline).";
       };
@@ -42,7 +51,8 @@ let
     };
   };
 
-in {
+in
+{
   options.programs.openclaw = {
     enable = lib.mkEnableOption "OpenClaw (batteries-included)";
 
@@ -60,7 +70,7 @@ in {
 
     excludeTools = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [];
+      default = [ ];
       description = "Tool names to remove from the built-in toolchain.";
     };
 
@@ -104,54 +114,66 @@ in {
 
     skills = lib.mkOption {
       type = lib.types.listOf mkSkillOption;
-      default = [];
+      default = [ ];
       description = "Declarative skills installed into each instance workspace.";
     };
 
     customPlugins = lib.mkOption {
-      type = lib.types.listOf (lib.types.submodule {
-        options = {
-          source = lib.mkOption {
-            type = lib.types.str;
-            description = "Plugin source pointer (e.g., github:owner/repo or path:/...).";
+      type = lib.types.listOf (
+        lib.types.submodule {
+          options = {
+            source = lib.mkOption {
+              type = lib.types.str;
+              description = "Plugin source pointer (e.g., github:owner/repo or path:/...).";
+            };
+            config = lib.mkOption {
+              type = lib.types.attrs;
+              default = { };
+              description = "Plugin-specific configuration (env/files/etc).";
+            };
           };
-          config = lib.mkOption {
-            type = lib.types.attrs;
-            default = {};
-            description = "Plugin-specific configuration (env/files/etc).";
-          };
-        };
-      });
-      default = [];
+        }
+      );
+      default = [ ];
       description = "Custom/community plugins (merged with bundled plugin toggles).";
     };
 
-    bundledPlugins = let
-      mkPlugin = { name, defaultEnable ? false }: {
-        enable = lib.mkOption {
-          type = lib.types.bool;
-          default = defaultEnable;
-          description = "Enable the ${name} plugin (bundled).";
+    bundledPlugins =
+      let
+        mkPlugin =
+          {
+            name,
+            defaultEnable ? false,
+          }:
+          {
+            enable = lib.mkOption {
+              type = lib.types.bool;
+              default = defaultEnable;
+              description = "Enable the ${name} plugin (bundled).";
+            };
+            config = lib.mkOption {
+              type = lib.types.attrs;
+              default = { };
+              description = "Bundled plugin configuration passed through to ${name} (env/settings).";
+            };
+          };
+      in
+      {
+        summarize = mkPlugin { name = "summarize"; };
+        peekaboo = mkPlugin { name = "peekaboo"; };
+        oracle = mkPlugin { name = "oracle"; };
+        poltergeist = mkPlugin { name = "poltergeist"; };
+        sag = mkPlugin { name = "sag"; };
+        camsnap = mkPlugin { name = "camsnap"; };
+        gogcli = mkPlugin { name = "gogcli"; };
+        goplaces = mkPlugin {
+          name = "goplaces";
+          defaultEnable = true;
         };
-        config = lib.mkOption {
-          type = lib.types.attrs;
-          default = {};
-          description = "Bundled plugin configuration passed through to ${name} (env/settings).";
-        };
+        bird = mkPlugin { name = "bird"; };
+        sonoscli = mkPlugin { name = "sonoscli"; };
+        imsg = mkPlugin { name = "imsg"; };
       };
-    in {
-      summarize = mkPlugin { name = "summarize"; };
-      peekaboo = mkPlugin { name = "peekaboo"; };
-      oracle = mkPlugin { name = "oracle"; };
-      poltergeist = mkPlugin { name = "poltergeist"; };
-      sag = mkPlugin { name = "sag"; };
-      camsnap = mkPlugin { name = "camsnap"; };
-      gogcli = mkPlugin { name = "gogcli"; };
-      goplaces = mkPlugin { name = "goplaces"; defaultEnable = true; };
-      bird = mkPlugin { name = "bird"; };
-      sonoscli = mkPlugin { name = "sonoscli"; };
-      imsg = mkPlugin { name = "imsg"; };
-    };
 
     launchd.enable = lib.mkOption {
       type = lib.types.bool;
@@ -179,7 +201,7 @@ in {
 
     instances = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule instanceModule);
-      default = {};
+      default = { };
       description = "Named OpenClaw instances (prod/test).";
     };
 
@@ -199,7 +221,7 @@ in {
 
     config = lib.mkOption {
       type = lib.types.submodule { options = openclawLib.generatedConfigOptions; };
-      default = {};
+      default = { };
       description = "OpenClaw config (schema-typed).";
     };
   };
