@@ -103,23 +103,14 @@ let
   sourceFetch = lib.removeAttrs sourceInfo [ "pnpmDepsHash" ];
   pnpmPlatform = if stdenv.hostPlatform.isDarwin then "darwin" else "linux";
   pnpmArch = if stdenv.hostPlatform.isAarch64 then "arm64" else "x64";
-  nodeAddonApi = stdenv.mkDerivation {
-    pname = "node-addon-api";
-    version = "8.5.0";
-    src = fetchurl {
-      url = "https://registry.npmjs.org/node-addon-api/-/node-addon-api-8.5.0.tgz";
-      hash = "sha256-0S8HyBYig7YhNVGFXx2o2sFiMxN0YpgwteZA8TDweRA=";
-    };
-    dontConfigure = true;
-    dontBuild = true;
-    installPhase = "${../scripts/node-addon-api-install.sh}";
-  };
+  revShort = lib.substring 0 8 sourceInfo.rev;
+  nodeAddonApi = import ../packages/node-addon-api.nix { inherit stdenv fetchurl; };
 
 in
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "openclaw-config-options";
-  version = "2026.1.8-2";
+  version = "unstable-${revShort}";
 
   src = fetchFromGitHub sourceFetch;
 
