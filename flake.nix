@@ -120,6 +120,7 @@
     )
     // {
       overlays.default = overlay;
+      nixosModules.openclaw-gateway = import ./nix/modules/nixos/openclaw-gateway.nix;
       homeManagerModules.openclaw = import ./nix/modules/home-manager/openclaw.nix;
       darwinModules.openclaw = import ./nix/modules/darwin/openclaw.nix;
     };
