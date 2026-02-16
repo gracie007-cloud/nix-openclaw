@@ -1,8 +1,9 @@
-{ lib
-, buildEnv
-, openclaw-gateway
-, openclaw-app ? null
-, extendedTools ? []
+{
+  lib,
+  buildEnv,
+  openclaw-gateway,
+  openclaw-app ? null,
+  extendedTools ? [ ],
 }:
 
 let

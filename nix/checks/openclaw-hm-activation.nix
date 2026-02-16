@@ -8,7 +8,8 @@ in
 pkgs.testers.nixosTest {
   name = "openclaw-hm-activation";
 
-  nodes.machine = { ... }:
+  nodes.machine =
+    { ... }:
     {
       imports = [ home-manager.nixosModules.home-manager ];
 
@@ -23,7 +24,8 @@ pkgs.testers.nixosTest {
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
-        users.alice = { lib, ... }:
+        users.alice =
+          { lib, ... }:
           {
             imports = [ openclawModule ];
 
