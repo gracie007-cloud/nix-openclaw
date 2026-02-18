@@ -26,8 +26,8 @@ let
 
   bundledPluginSources =
     let
-      stepieteRev = "983210e3b6e9285780e87f48ce9354b51a270e95";
-      stepieteNarHash = "sha256-fY8t41kMSHu2ovf89mIdvC7vkceroCwKxw/MKVn4rsE=";
+      stepieteRev = "c110209720cbc6c87fccb6c1e1c2b79b1d719245";
+      stepieteNarHash = "sha256-1Vo7rcLGdKaqj39J3HhBKh8IbljSjgCUhinCFJbDPl8=";
       stepiete =
         tool:
         "github:openclaw/nix-steipete-tools?dir=tools/${tool}&rev=${stepieteRev}&narHash=${stepieteNarHash}";
