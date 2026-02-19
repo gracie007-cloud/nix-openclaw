@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 165c18819eae1b0e77cd5157d966ce41b0fbf0aa. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev e741a53919143704992cc4ade1cfc5ba395f63fa. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -7947,6 +7947,30 @@ in
           type = t.nullOr (t.str);
           default = null;
         };
+        integrity = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        resolvedAt = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        resolvedName = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        resolvedSpec = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        resolvedVersion = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        shasum = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
         source = lib.mkOption {
           type = t.oneOf [ (t.enum [ "npm" ]) (t.enum [ "archive" ]) (t.enum [ "path" ]) ];
         };
@@ -8852,6 +8876,30 @@ in
         type = t.nullOr (t.str);
         default = null;
       };
+      integrity = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
+      resolvedAt = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
+      resolvedName = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
+      resolvedSpec = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
+      resolvedVersion = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
+      shasum = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
       source = lib.mkOption {
         type = t.oneOf [ (t.enum [ "npm" ]) (t.enum [ "archive" ]) (t.enum [ "path" ]) ];
       };
@@ -8874,15 +8922,6 @@ in
       type = t.nullOr (t.submodule { options = {
       paths = lib.mkOption {
         type = t.nullOr (t.listOf (t.str));
-        default = null;
-      };
-    }; });
-      default = null;
-    };
-    runtime = lib.mkOption {
-      type = t.nullOr (t.submodule { options = {
-      allowLegacyExec = lib.mkOption {
-        type = t.nullOr (t.bool);
         default = null;
       };
     }; });
