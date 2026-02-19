@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 267bb3c81cfd2fc70c79df2633895582bb557295. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 043b2f5e7a0061c319d4ab52645a7bc48d268bc2. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -8841,6 +8841,15 @@ in
       type = t.nullOr (t.submodule { options = {
       paths = lib.mkOption {
         type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+    }; });
+      default = null;
+    };
+    runtime = lib.mkOption {
+      type = t.nullOr (t.submodule { options = {
+      allowLegacyExec = lib.mkOption {
+        type = t.nullOr (t.bool);
         default = null;
       };
     }; });
