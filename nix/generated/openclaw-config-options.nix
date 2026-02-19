@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 825cc70796cd839e9d472c48ccae271a325f4328. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 165c18819eae1b0e77cd5157d966ce41b0fbf0aa. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -2035,6 +2035,23 @@ in
     }; });
       default = null;
     };
+    ssrfPolicy = lib.mkOption {
+      type = t.nullOr (t.submodule { options = {
+      allowPrivateNetwork = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
+      allowedHostnames = lib.mkOption {
+        type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+      hostnameAllowlist = lib.mkOption {
+        type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+    }; });
+      default = null;
+    };
   }; });
     default = null;
   };
@@ -3866,6 +3883,10 @@ in
           type = t.nullOr (t.listOf (t.oneOf [ (t.str) (t.number) ]));
           default = null;
         };
+        attachmentRoots = lib.mkOption {
+          type = t.nullOr (t.listOf (t.str));
+          default = null;
+        };
         blockStreaming = lib.mkOption {
           type = t.nullOr (t.bool);
           default = null;
@@ -4025,6 +4046,10 @@ in
           type = t.nullOr (t.str);
           default = null;
         };
+        remoteAttachmentRoots = lib.mkOption {
+          type = t.nullOr (t.listOf (t.str));
+          default = null;
+        };
         remoteHost = lib.mkOption {
           type = t.nullOr (t.str);
           default = null;
@@ -4046,6 +4071,10 @@ in
       };
       allowFrom = lib.mkOption {
         type = t.nullOr (t.listOf (t.oneOf [ (t.str) (t.number) ]));
+        default = null;
+      };
+      attachmentRoots = lib.mkOption {
+        type = t.nullOr (t.listOf (t.str));
         default = null;
       };
       blockStreaming = lib.mkOption {
@@ -4205,6 +4234,10 @@ in
       };
       region = lib.mkOption {
         type = t.nullOr (t.str);
+        default = null;
+      };
+      remoteAttachmentRoots = lib.mkOption {
+        type = t.nullOr (t.listOf (t.str));
         default = null;
       };
       remoteHost = lib.mkOption {
