@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 02ac5b59d18f6edca14cec481d6156e03b759c87. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 665221a1f03ad8ff455e0a3e2b92d495b28f50bc. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -3013,6 +3013,15 @@ in
         }; });
           default = null;
         };
+        slashCommand = lib.mkOption {
+          type = t.nullOr (t.submodule { options = {
+          ephemeral = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
+        }; });
+          default = null;
+        };
         status = lib.mkOption {
           type = t.nullOr (t.enum [ "online" "dnd" "idle" "invisible" ]);
           default = null;
@@ -3741,6 +3750,15 @@ in
         };
         minDelayMs = lib.mkOption {
           type = t.nullOr (t.int);
+          default = null;
+        };
+      }; });
+        default = null;
+      };
+      slashCommand = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        ephemeral = lib.mkOption {
+          type = t.nullOr (t.bool);
           default = null;
         };
       }; });
